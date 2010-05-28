@@ -50,8 +50,9 @@ LatLon.prototype.distanceTo = function(point, precision) {
           Math.sin(dLon/2) * Math.sin(dLon/2);
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   var d = R * c;
+  
   return d.toPrecisionFixed(precision);
-}
+};
 
 
 /**
@@ -71,7 +72,7 @@ LatLon.prototype.bearingTo = function(point) {
   var brng = Math.atan2(y, x);
   
   return (brng.toDeg()+360) % 360;
-}
+};
 
 
 /**
@@ -93,7 +94,7 @@ LatLon.prototype.finalBearingTo = function(point) {
           
   // ... & reverse it by adding 180°
   return (brng.toDeg()+180) % 360;
-}
+};
 
 
 /**
@@ -104,7 +105,7 @@ LatLon.prototype.finalBearingTo = function(point) {
  * @returns {LatLon} Midpoint between this point and the supplied point
  */
 LatLon.prototype.midpointTo = function(point) {
-  lat1 = this._lat.toRad(), lon1 = this._lon.toRad();
+  lat1 = this._lat.toRad(); lon1 = this._lon.toRad();
   lat2 = point._lat.toRad();
   var dLon = (point._lon-this._lon).toRad();
 
@@ -116,7 +117,7 @@ LatLon.prototype.midpointTo = function(point) {
   lon3 = lon1 + Math.atan2(By, Math.cos(lat1) + Bx);
 
   return new LatLon(lat3.toDeg(), lon3.toDeg());
-}
+};
 
 
 /**
@@ -142,7 +143,7 @@ LatLon.prototype.destinationPoint = function(brng, dist) {
 
   if (isNaN(lat2) || isNaN(lon2)) return null;
   return new LatLon(lat2.toDeg(), lon2.toDeg());
-}
+};
 
 
 /**
@@ -157,10 +158,10 @@ LatLon.prototype.destinationPoint = function(brng, dist) {
  * @returns {LatLon} Destination point (null if no unique intersection defined)
  */
 LatLon.intersection = function(p1, brng1, p2, brng2) {
-  lat1 = p1._lat.toRad(), lon1 = p1._lon.toRad();
-  lat2 = p2._lat.toRad(), lon2 = p2._lon.toRad();
-  brng13 = brng1.toRad(), brng23 = brng2.toRad();
-  dLat = lat2-lat1, dLon = lon2-lon1;
+  lat1 = p1._lat.toRad(); lon1 = p1._lon.toRad();
+  lat2 = p2._lat.toRad(); lon2 = p2._lon.toRad();
+  brng13 = brng1.toRad(); brng23 = brng2.toRad();
+  dLat = lat2-lat1; dLon = lon2-lon1;
   
   dist12 = 2*Math.asin( Math.sqrt( Math.sin(dLat/2)*Math.sin(dLat/2) + 
     Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)*Math.sin(dLon/2) ) );
@@ -194,16 +195,16 @@ LatLon.intersection = function(p1, brng1, p2, brng2) {
   alpha3 = Math.acos( -Math.cos(alpha1)*Math.cos(alpha2) + 
                        Math.sin(alpha1)*Math.sin(alpha2)*Math.cos(dist12) );
   dist13 = Math.atan2( Math.sin(dist12)*Math.sin(alpha1)*Math.sin(alpha2), 
-                       Math.cos(alpha2)+Math.cos(alpha1)*Math.cos(alpha3) )
+                       Math.cos(alpha2)+Math.cos(alpha1)*Math.cos(alpha3) );
   lat3 = Math.asin( Math.sin(lat1)*Math.cos(dist13) + 
-                    Math.cos(lat1)*Math.sin(dist13)*Math.cos(brng13) );
+                       Math.cos(lat1)*Math.sin(dist13)*Math.cos(brng13) );
   dLon13 = Math.atan2( Math.sin(brng13)*Math.sin(dist13)*Math.cos(lat1), 
                        Math.cos(dist13)-Math.sin(lat1)*Math.sin(lat3) );
   lon3 = lon1+dLon13;
   lon3 = (lon3+Math.PI) % (2*Math.PI) - Math.PI;  // normalise to -180..180º
   
   return new LatLon(lat3.toDeg(), lon3.toDeg());
-}
+};
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
@@ -229,7 +230,7 @@ LatLon.prototype.rhumbDistanceTo = function(point) {
   var dist = Math.sqrt(dLat*dLat + q*q*dLon*dLon) * R; 
   
   return dist.toPrecisionFixed(4);  // 4 sig figs reflects typical 0.3% accuracy of spherical model
-}
+};
 
 /**
  * Returns the bearing from this point to the supplied point along a rhumb line, in degrees
@@ -246,7 +247,7 @@ LatLon.prototype.rhumbBearingTo = function(point) {
   var brng = Math.atan2(dLon, dPhi);
   
   return (brng.toDeg()+360) % 360;
-}
+};
 
 /**
  * Returns the destination point from this point having travelled the given distance (in km) on the 
@@ -272,7 +273,7 @@ LatLon.prototype.rhumbDestinationPoint = function(brng, dist) {
   lon2 = (lon1+dLon+3*Math.PI)%(2*Math.PI) - Math.PI;
  
   return new LatLon(lat2.toDeg(), lon2.toDeg());
-}
+};
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
 
@@ -291,7 +292,7 @@ LatLon.prototype.lat = function(format, dp) {
   if (typeof format == 'undefined') return this._lat;
   
   return Geo.toLat(this._lat, format, dp);
-}
+};
 
 /**
  * Returns the longitude of this point; signed numeric degrees if no format, otherwise format & dp 
@@ -307,7 +308,7 @@ LatLon.prototype.lon = function(format, dp) {
   if (typeof format == 'undefined') return this._lon;
   
   return Geo.toLon(this._lon, format, dp);
-}
+};
 
 /**
  * Returns a string representation of this point; format and dp as per lat()/lon()
@@ -322,7 +323,7 @@ LatLon.prototype.toString = function(format, dp) {
   if (typeof format == 'undefined') format = 'dms';
   
   return Geo.toLat(this._lat, format, dp) + ', ' + Geo.toLon(this._lon, format, dp);
-}
+};
 
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
@@ -331,16 +332,16 @@ LatLon.prototype.toString = function(format, dp) {
 
 /** Convert numeric degrees to radians */
 if (typeof(String.prototype.toRad) === "undefined") {
-  Number.prototype.toRad = function() {
+  String.prototype.toRad = Number.prototype.toRad = function() {
     return this * Math.PI / 180;
-  }
+  };
 }
 
 /** Convert radians to numeric (signed) degrees */
 if (typeof(String.prototype.toDeg) === "undefined") {
-  Number.prototype.toDeg = function() {
+  String.prototype.toDeg = Number.prototype.toDeg = function() {
     return this * 180 / Math.PI;
-  }
+  };
 }
 
 /** 
@@ -349,12 +350,12 @@ if (typeof(String.prototype.toDeg) === "undefined") {
  * @param   {Number} precision: Number of significant digits to appear in the returned string
  * @returns {String} A string representation of number which contains precision significant digits
  */
-if (typeof(String.prototype.toDeg) === "undefined") {
-  Number.prototype.toPrecisionFixed = function(precision) {
+if (typeof(String.prototype.toPrecisionFixed) === "undefined") {
+  String.prototype.toPrecisionFixed = Number.prototype.toPrecisionFixed = function(precision) {
     var numb = this < 0 ? -this : this;  // can't take log of -ve number...
     var sign = this < 0 ? '-' : '';
     
-    if (numb == 0) { n = '0.'; while (precision--) n += '0'; return n };  // can't take log of zero
+    if (numb == 0) { n = '0.'; while (precision--) n += '0'; return n; };  // can't take log of zero
   
     var scale = Math.ceil(Math.log(numb)*Math.LOG10E);  // no of digits before decimal
     var n = String(Math.round(numb * Math.pow(10, precision-scale)));
@@ -367,7 +368,7 @@ if (typeof(String.prototype.toDeg) === "undefined") {
       n = '0.' + n;
     }
     return sign + n;
-  }
+  };
 }
 
 /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  */
